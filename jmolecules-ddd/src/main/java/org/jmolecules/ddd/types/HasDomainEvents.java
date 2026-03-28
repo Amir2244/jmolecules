@@ -18,6 +18,7 @@ package org.jmolecules.ddd.types;
 import org.jmolecules.stereotype.Stereotype;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Interface to be implemented by {@link AggregateRoot}s that need to register and expose domain events for deferred
@@ -36,29 +37,34 @@ import java.util.Collection;
  * @param <E> the domain event base type.
  * @author Amir Youssef
  * @see <a href="https://www.domainlanguage.com/ddd/reference/">Domain-Driven Design Reference (Evans) - Domain
- *      Events</a>
+ * Events</a>
  * @see <a href="https://vaughnvernon.co/?p=838">Vaughn Vernon - Modeling Aggregates with Domain Events</a>
  */
 @Stereotype(priority = 20)
 public interface HasDomainEvents<T extends AggregateRoot<T, ?>, E> {
 
-	/**
-	 * Registers the given domain event for later publication.
-	 *
-	 * @param event must not be {@literal null}.
-	 */
-	void registerEvent(E event);
+    /**
+     * Registers the given domain event for later publication.
+     *
+     * @param event must not be {@literal null}.
+     */
+    default void registerEvent(E event) {
+    }
 
-	/**
-	 * Returns all domain events that have been registered since the last {@link #clearDomainEvents()} call.
-	 *
-	 * @return a collection of registered events, never {@literal null}.
-	 */
-	Collection<E> getDomainEvents();
+    /**
+     * Returns all domain events that have been registered since the last {@link #clearDomainEvents()} call.
+     *
+     * @return a collection of registered events, never {@literal null}.
+     */
+    default Collection<E> getDomainEvents() {
+        return Collections.emptyList();
+    }
 
-	/**
-	 * Clears all domain events currently held. Typically invoked by the infrastructure after events have been published.
-	 *
-	 */
-	void clearDomainEvents();
+    /**
+     * Clears all domain events currently held. Typically invoked by the infrastructure after events have been published.
+     *
+     */
+    default void clearDomainEvents() {
+    }
+
 }

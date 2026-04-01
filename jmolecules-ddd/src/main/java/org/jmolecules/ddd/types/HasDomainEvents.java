@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,15 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Interface to be implemented by {@link AggregateRoot}s that need to register and expose domain events for deferred
- * publication by the infrastructure.
+ * Interface to be implemented by {@link AggregateRoot}s that expose domain events for deferred publication by the
+ * infrastructure.
  * <p>
- * In Domain-Driven Design, the Aggregate Root acts as a consistency boundary. Changes within that boundary often produce
- * side effects that other parts of the system need to know about. Standardizing how these events are stored and
- * retrieved keeps infrastructure concerns (such as {@link Repository} implementations or Unit-of-Work patterns) from
- * leaking into domain logic.
+ * This interface defines the infrastructure-facing contract for reading and clearing domain events. How events are
+ * registered internally is the aggregate's own responsibility — Java interfaces cannot express non-public methods, so
+ * event registration is intentionally left out to preserve DDD encapsulation.
  * <p>
- * The domain logic calls {@link #registerEvent(Object)} when a state change occurs. The infrastructure (e.g., a
- * {@link Repository} or Transaction Interceptor) calls {@link #getDomainEvents()} after the transaction commits,
- * publishes the events, and then calls {@link #clearDomainEvents()}.
+ * The infrastructure (e.g., a {@link Repository} or Transaction Interceptor) calls {@link #getDomainEvents()} after
+ * the transaction commits, publishes the events, and then calls {@link #clearDomainEvents()}.
  *
  * @param <T> the concrete {@link AggregateRoot} type.
  * @param <E> the domain event base type.
@@ -44,14 +42,6 @@ import java.util.Collections;
 public interface HasDomainEvents<T extends AggregateRoot<T, ?>, E> {
 
     /**
-     * Registers the given domain event for later publication.
-     *
-     * @param event must not be {@literal null}.
-     */
-    default void registerEvent(E event) {
-    }
-
-    /**
      * Returns all domain events that have been registered since the last {@link #clearDomainEvents()} call.
      *
      * @return a collection of registered events, never {@literal null}.
@@ -62,7 +52,6 @@ public interface HasDomainEvents<T extends AggregateRoot<T, ?>, E> {
 
     /**
      * Clears all domain events currently held. Typically invoked by the infrastructure after events have been published.
-     *
      */
     default void clearDomainEvents() {
     }

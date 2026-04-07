@@ -36,6 +36,7 @@ import java.util.Collections;
  * @author Amir Youssef
  * @see <a href="https://www.domainlanguage.com/ddd/reference/">Domain-Driven Design Reference (Evans) - Domain
  * Events</a>
+ * @see DomainEvents
  * @see <a href="https://vaughnvernon.co/?p=838">Vaughn Vernon - Modeling Aggregates with Domain Events</a>
  */
 @Stereotype(priority = 20)
